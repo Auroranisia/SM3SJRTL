@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pilihan Ganda - Revolusi Prancis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 15px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-section {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .quiz-content {
+            padding: 25px 20px;
+            min-height: 400px;
+        }
+
+        .question-card {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option-label {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            flex: 1;
+            color: #495057;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .option.selected {
+            background: #667eea;
+            border-color: #667eea;
+            transform: scale(1.02);
+        }
+
+        .option.selected .option-label {
+            background: white;
+            color: #667eea;
+        }
+
+        .option.selected .option-text {
+            color: white;
+        }
+
+        .option.correct {
+            background: #28a745;
+            border-color: #28a745;
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option.correct .option-label {
+            background: white;
+            color: #28a745;
+        }
+
+        .option.correct .option-text {
+            color: white;
+        }
+
+        .option.wrong {
+            background: #dc3545;
+            border-color: #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        .option.wrong .option-label {
+            background: white;
+            color: #dc3545;
+        }
+
+        .option.wrong .option-text {
+            color: white;
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .explanation {
+            display: none;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation-text {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-next {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #e9ecef;
+            color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-screen {
+            display: none;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .result-screen.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .result-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #212529;
+            margin-bottom: 15px;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .result-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #6c757d;
+            font-size: 16px;
+        }
+
+        .result-value {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .result-value.correct {
+            color: #28a745;
+        }
+
+        .result-value.wrong {
+            color: #dc3545;
+        }
+
+        .btn-restart {
+            background: #667eea;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-restart:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-home {
+            background: #6c757d;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-home:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Kuis Pilihan Ganda</h1>
+            <p>Revolusi Prancis</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>Soal <span id="currentQuestion">1</span> dari <span id="totalQuestions">30</span></span>
+                <span><span id="correctCount">0</span> Benar | <span id="wrongCount">0</span> Salah</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="quiz-content" id="quizContent">
+            <!-- Questions will be inserted here -->
+        </div>
+
+        <div class="button-group" id="buttonGroup">
+            <button class="btn btn-next" id="nextBtn" disabled>Selanjutnya →</button>
+        </div>
+
+        <div class="result-screen" id="resultScreen">
+            <div class="result-icon" id="resultIcon">🏆</div>
+            <div class="result-title" id="resultTitle">Selamat!</div>
+            <div class="result-score"><span id="finalScore">0</span>/30</div>
+            
+            <div class="result-details">
+                <div class="result-row">
+                    <span class="result-label">Jawaban Benar</span>
+                    <span class="result-value correct" id="finalCorrect">0</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Jawaban Salah</span>
+                    <span class="result-value wrong" id="finalWrong">0</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Persentase</span>
+                    <span class="result-value" id="percentage">0%</span>
+                </div>
+            </div>
+
+            <button class="btn-restart" id="restartBtn">🔄 Ulangi Kuis</button>
+            <br>
+            <a href="index.html" class="btn-home">🏠 Kembali ke Menu</a>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Sistem pemerintahan Prancis sebelum revolusi dikenal sebagai ...",
+                options: ["Monarki konstitusional", "Monarki absolut", "Republik demokratis", "Federasi aristokratik"],
+                correct: 1,
+                explanation: "Raja memegang kekuasaan tanpa batas."
+            },
+            {
+                question: "Ungkapan \"L'état, c'est moi\" menunjukkan bahwa ...",
+                options: ["Rakyat memiliki kedaulatan tertinggi", "Raja menganggap dirinya sebagai negara", "Pemerintah berjalan atas dasar hukum", "Gereja memimpin negara"],
+                correct: 1,
+                explanation: "Louis XIV menggambarkan absolutisme dengan ungkapan ini."
+            },
+            {
+                question: "Golongan ketiga dalam masyarakat Prancis beranggotakan ...",
+                options: ["Kaum gereja", "Bangsawan", "Rakyat biasa", "Tentara"],
+                correct: 2,
+                explanation: "Termasuk petani, buruh, pedagang, intelektual."
+            },
+            {
+                question: "Beban pajak terbesar ditanggung oleh ...",
+                options: ["Golongan pertama", "Golongan kedua", "Golongan ketiga", "Semua sama rata"],
+                correct: 2,
+                explanation: "Golongan ketiga menanggung pajak penuh."
+            },
+            {
+                question: "Sidang États Généraux 1789 gagal karena ...",
+                options: ["Raja menolak semua usulan rakyat", "Golongan ketiga menolak dominasi dua golongan atas", "Tidak ada wakil bangsawan", "Pengaruh asing terlalu kuat"],
+                correct: 1,
+                explanation: "Golongan ketiga memisahkan diri membentuk Majelis Nasional."
+            },
+            {
+                question: "Sumpah Lapangan Tenis berisi tekad ...",
+                options: ["Mengusir raja dari istana", "Membentuk republik segera", "Menyusun konstitusi baru", "Menyerbu Bastille"],
+                correct: 2,
+                explanation: "Mereka bersumpah tidak bubar sebelum ada konstitusi."
+            },
+            {
+                question: "Penyerbuan Bastille terjadi pada ...",
+                options: ["4 Juli 1776", "14 Juli 1789", "18 Brumaire 1799", "5 Mei 1789"],
+                correct: 1,
+                explanation: "Tanggal ini jadi Hari Nasional Prancis."
+            },
+            {
+                question: "Sistem feodalisme dihapus oleh ...",
+                options: ["Raja Louis XVI", "Majelis Nasional", "Kaum Jacobin", "Napoleon Bonaparte"],
+                correct: 1,
+                explanation: "Dilakukan pada Agustus 1789."
+            },
+            {
+                question: "Isi utama Déclaration des Droits de l'Homme adalah ...",
+                options: ["Hak istimewa bangsawan", "Kewajiban warga negara", "Kesetaraan dan kebebasan manusia", "Kekuasaan raja ditetapkan"],
+                correct: 2,
+                explanation: "Menegaskan hak asasi dan kedaulatan rakyat."
+            },
+            {
+                question: "Prinsip \"kedaulatan berada di tangan rakyat\" berarti ...",
+                options: ["Rakyat dapat menggulingkan pemerintahan", "Kekuasaan raja tetap kuat", "Pemerintahan dijalankan atas nama rakyat", "Hanya bangsawan boleh berpolitik"],
+                correct: 2,
+                explanation: "Prinsip demokrasi modern."
+            },
+            {
+                question: "Raja Louis XVI dihukum mati menggunakan ...",
+                options: ["Pedang", "Senjata api", "Guillotine", "Racun"],
+                correct: 2,
+                explanation: "Simbol eksekusi revolusioner."
+            },
+            {
+                question: "Pemimpin Masa Teror adalah ...",
+                options: ["Danton", "Marat", "Robespierre", "Napoleon"],
+                correct: 2,
+                explanation: "Pemimpin kaum Jacobin."
+            },
+            {
+                question: "Masa Teror dikenal karena ...",
+                options: ["Pembatasan pajak", "Eksekusi besar-besaran tanpa pengadilan adil", "Penurunan harga pangan", "Pembukaan Bastille"],
+                correct: 1,
+                explanation: "Ribuan dianggap musuh revolusi."
+            },
+            {
+                question: "Kaum Jacobin termasuk kelompok ...",
+                options: ["Moderat", "Radikal", "Konservatif", "Monarkis"],
+                correct: 1,
+                explanation: "Menganut pemerintahan rakyat ekstrem."
+            },
+            {
+                question: "Kekacauan politik menyebabkan ...",
+                options: ["Kembali ke monarki", "Intervensi asing dan perang", "Stabilitas ekonomi", "Raja kembali berkuasa"],
+                correct: 1,
+                explanation: "Perang dengan negara tetangga melemahkan Prancis."
+            },
+            {
+                question: "Kudeta 18 Brumaire terjadi pada tahun ...",
+                options: ["1789", "1793", "1799", "1808"],
+                correct: 2,
+                explanation: "Napoleon mengambil alih kekuasaan."
+            },
+            {
+                question: "Napoleon Bonaparte naik karena ...",
+                options: ["Dukungan bangsawan", "Kemenangan militer dan krisis politik", "Warisan keluarga kerajaan", "Bantuan Inggris"],
+                correct: 1,
+                explanation: "Ia populer sebagai jenderal muda."
+            },
+            {
+                question: "Sistem Ancien Régime menyebabkan ...",
+                options: ["Kesetaraan sosial", "Ketimpangan sosial-ekonomi", "Stabilitas pemerintahan", "Penghapusan pajak"],
+                correct: 1,
+                explanation: "Golongan bawah tertindas."
+            },
+            {
+                question: "Krisis keuangan Prancis disebabkan oleh ...",
+                options: ["Surplus panen", "Perang dan pemborosan istana", "Pajak berlebih bagi bangsawan", "Kelebihan ekspor"],
+                correct: 1,
+                explanation: "Utang besar akibat perang."
+            },
+            {
+                question: "Kelemahan Raja Louis XVI terlihat pada ...",
+                options: ["Kemampuan diplomasi tinggi", "Gagal reformasi ekonomi", "Menguasai parlemen", "Menolak bantuan rakyat"],
+                correct: 1,
+                explanation: "Tak mampu menegakkan reformasi."
+            },
+            {
+                question: "Pemikiran Pencerahan memengaruhi revolusi karena ...",
+                options: ["Menolak semua bentuk perubahan", "Mendukung absolutisme", "Mengajarkan hak asasi dan pemerintahan rakyat", "Mendorong perang kolonial"],
+                correct: 2,
+                explanation: "Ide Rousseau, Voltaire, Montesquieu."
+            },
+            {
+                question: "Revolusi Amerika berpengaruh pada Revolusi Prancis karena ...",
+                options: ["Membantu ekonomi Prancis", "Menunjukkan rakyat bisa menggulingkan tirani", "Membentuk sekutu militer", "Menurunkan harga pangan"],
+                correct: 1,
+                explanation: "Memberi inspirasi kebebasan."
+            },
+            {
+                question: "Persaingan antarnegara Eropa menyebabkan ...",
+                options: ["Stabilitas politik", "Tekanan terhadap Prancis yang lemah", "Penghapusan perang", "Kesepakatan damai"],
+                correct: 1,
+                explanation: "Krisis Eropa memperparah kondisi Prancis."
+            },
+            {
+                question: "Salah satu akibat politik revolusi adalah ...",
+                options: ["Munculnya monarki baru", "Runtuhnya monarki absolut", "Kembali ke kekuasaan gereja", "Kekuatan bangsawan meningkat"],
+                correct: 1,
+                explanation: "Sistem absolut dihapus."
+            },
+            {
+                question: "Deklarasi HAM melahirkan ...",
+                options: ["Kesetaraan di depan hukum", "Hak istimewa bangsawan", "Feodalisme baru", "Kekuasaan militer"],
+                correct: 0,
+                explanation: "Menegaskan prinsip kesetaraan."
+            },
+            {
+                question: "Perubahan sosial-ekonomi penting setelah revolusi adalah ...",
+                options: ["Feodalisme dihapus", "Pajak rakyat naik", "Kekuasaan gereja diperkuat", "Perdagangan ditutup"],
+                correct: 0,
+                explanation: "Menuju masyarakat egaliter."
+            },
+            {
+                question: "Ide kebebasan, kesetaraan, dan persaudaraan menyebar melalui ...",
+                options: ["Perdagangan laut", "Ekspansi militer Napoleon", "Gereja Katolik", "Kolonial Inggris"],
+                correct: 1,
+                explanation: "Napoleon menyebarkan ide revolusi."
+            },
+            {
+                question: "Revolusi Prancis mengakhiri kepercayaan pada ...",
+                options: ["Demokrasi", "Kekuasaan raja absolut", "Pemerintahan republik", "Sistem konstitusional"],
+                correct: 1,
+                explanation: "Monarki absolut ditinggalkan."
+            },
+            {
+                question: "Herman Willem Daendels dikenal sebagai ...",
+                options: ["Pemimpin VOC", "Gubernur Jenderal di bawah pengaruh Prancis", "Raja Belanda", "Utusan Inggris"],
+                correct: 1,
+                explanation: "Dikirim oleh pemerintahan Belanda di bawah Napoleon."
+            },
+            {
+                question: "Salah satu reformasi Daendels yang berpengaruh di Indonesia adalah ...",
+                options: ["Menetapkan tanam paksa", "Mendirikan Jalan Raya Pos", "Menutup pelabuhan", "Membentuk VOC"],
+                correct: 1,
+                explanation: "Infrastruktur modern ala Prancis."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let selectedAnswer = null;
+
+        function renderQuestion() {
+            const quizContent = document.getElementById('quizContent');
+            const question = quizData[currentQuestionIndex];
+            
+            quizContent.innerHTML = `
+                <div class="question-card active">
+                    <div class="question-number">Soal ${currentQuestionIndex + 1}</div>
+                    <div class="question-text">${question.question}</div>
+                    <div class="options" id="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" data-index="${index}">
+                                <div class="option-label">${String.fromCharCode(65 + index)}</div>
+                                <div class="option-text">${option}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="explanation" id="explanation">
+                        <div class="explanation-title">💡 Penjelasan</div>
+                        <div class="explanation-text">${question.explanation}</div>
+                    </div>
+                </div>
+            `;
+
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', () => selectAnswer(option));
+            });
+
+            updateProgress();
+        }
+
+        function selectAnswer(optionElement) {
+            if (selectedAnswer !== null) return;
+
+            const selectedIndex = parseInt(optionElement.dataset.index);
+            const question = quizData[currentQuestionIndex];
+            
+            selectedAnswer = selectedIndex;
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.add('disabled');
+            });
+
+            if (selectedIndex === question.correct) {
+                optionElement.classList.add('correct');
+                correctAnswers++;
+                document.getElementById('correctCount').textContent = correctAnswers;
+            } else {
+                optionElement.classList.add('wrong');
+                document.querySelectorAll('.option')[question.correct].classList.add('correct');
+                wrongAnswers++;
+                document.getElementById('wrongCount').textContent = wrongAnswers;
+            }
+
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function nextQuestion() {
+            selectedAnswer = null;
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizData.length) {
+                renderQuestion();
+                document.getElementById('nextBtn').disabled = true;
+            } else {
+                showResult();
+            }
+        }
+
+        function updateProgress() {
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function showResult() {
+            document.querySelector('.progress-section').style.display = 'none';
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('buttonGroup').style.display = 'none';
+            
+            const resultScreen = document.getElementById('resultScreen');
+            const percentage = Math.round((correctAnswers / quizData.length) * 100);
+            
+            document.getElementById('finalScore').textContent = correctAnswers;
+            document.getElementById('finalCorrect').textContent = correctAnswers;
+            document.getElementById('finalWrong').textContent = wrongAnswers;
+            document.getElementById('percentage').textContent = percentage + '%';
+
+            if (percentage === 100) {
+                document.getElementById('resultIcon').textContent = '🏆';
+                document.getElementById('resultTitle').textContent = 'Sempurna!';
+            } else if (percentage >= 80) {
+                document.getElementById('resultIcon').textContent = '🎉';
+                document.getElementById('resultTitle').textContent = 'Sangat Bagus!';
+            } else if (percentage >= 60) {
+                document.getElementById('resultIcon').textContent = '👍';
+                document.getElementById('resultTitle').textContent = 'Bagus!';
+            } else {
+                document.getElementById('resultIcon').textContent = '💪';
+                document.getElementById('resultTitle').textContent = 'Tetap Semangat!';
+            }
+
+            resultScreen.classList.add('show');
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            selectedAnswer = null;
+
+            document.getElementById('correctCount').textContent = '0';
+            document.getElementById('wrongCount').textContent = '0';
+            
+            document.querySelector('.progress-section').style.display = 'block';
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('buttonGroup').style.display = 'flex';
+            document.getElementById('resultScreen').classList.remove('show');
+
+            renderQuestion();
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+        document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+
+        renderQuestion();
+    </script>
+</body>
+</html>
