@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Utama - Kuis Revolusi Prancis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .menu-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-decoration: none;
+            color: #212529;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: left 0.3s ease;
+            z-index: 0;
+        }
+
+        .menu-item:hover::before {
+            left: 0;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .menu-item > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-icon {
+            font-size: 40px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-item:hover .menu-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .menu-info {
+            flex: 1;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .menu-item:hover .menu-title {
+            color: white;
+        }
+
+        .menu-desc {
+            font-size: 14px;
+            color: #6c757d;
+            transition: color 0.3s ease;
+        }
+
+        .menu-item:hover .menu-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .menu-arrow {
+            font-size: 24px;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover .menu-arrow {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box-text {
+            font-size: 14px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">📚</div>
+            <h1>Kuis Revolusi Prancis</h1>
+            <p>Pilih jenis kuis yang ingin kamu mainkan</p>
+        </div>
+
+        <div class="content">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">37</div>
+                    <div class="stat-label">Materi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Kuis</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Latihan</div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                🎮 Daftar Kuis
+            </div>
+
+            <div class="menu-grid">
+                <a href="kuis-menjodohkan.html" class="menu-item">
+                    <div class="menu-icon">🎯</div>
+                    <div class="menu-info">
+                        <div class="menu-title">Kuis Menjodohkan</div>
+                        <div class="menu-desc">Cocokkan istilah dengan penjelasannya</div>
+                    </div>
+                    <div class="menu-arrow">→</div>
+                </a>
+
+                <!-- Template untuk kuis tambahan -->
+                <!--
+                <a href="kuis-pilihan-ganda.html" class="menu-item">
+                    <div class="menu-icon">✅</div>
+                    <div class="menu-info">
+                        <div class="menu-title">Kuis Pilihan Ganda</div>
+                        <div class="menu-desc">Pilih jawaban yang paling tepat</div>
+                    </div>
+                    <div class="menu-arrow">→</div>
+                </a>
+
+                <a href="kuis-benar-salah.html" class="menu-item">
+                    <div class="menu-icon">✔️</div>
+                    <div class="menu-info">
+                        <div class="menu-title">Kuis Benar/Salah</div>
+                        <div class="menu-desc">Tentukan pernyataan benar atau salah</div>
+                    </div>
+                    <div class="menu-arrow">→</div>
+                </a>
+
+                <a href="kuis-isian.html" class="menu-item">
+                    <div class="menu-icon">✏️</div>
+                    <div class="menu-info">
+                        <div class="menu-title">Kuis Isian</div>
+                        <div class="menu-desc">Isi jawaban dengan kata yang tepat</div>
+                    </div>
+                    <div class="menu-arrow">→</div>
+                </a>
+                -->
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">
+                    💡 Tips Belajar
+                </div>
+                <div class="info-box-text">
+                    Kerjakan kuis secara berulang untuk mengingat materi dengan lebih baik. Setiap kali kamu mengulang, urutan soal akan diacak!
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>✨ Selamat Belajar & Semangat! ✨</p>
+            <p style="margin-top: 10px; font-size: 12px;">Revolusi Prancis - Materi Sejarah</p>
+        </div>
+    </div>
+
+    <script>
+        // Animasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-30px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 100 * index);
+            });
+        });
+
+        // Efek ripple saat klik
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                ripple.style.left = e.clientX - this.getBoundingClientRect().left - 10 + 'px';
+                ripple.style.top = e.clientY - this.getBoundingClientRect().top - 10 + 'px';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.zIndex = '2';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Tambahkan CSS untuk animasi ripple
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(20);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
