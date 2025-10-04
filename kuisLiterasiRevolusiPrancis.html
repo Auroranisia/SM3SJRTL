@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Revolusi Prancis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .materi {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .materi h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .materi p {
+            text-align: justify;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .quiz-section {
+            padding: 20px;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: white;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #e8eaf6;
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            display: none;
+            font-size: 13px;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result h3 {
+            color: #2e7d32;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .result p {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Kuis Revolusi Prancis</h1>
+            <p>Pelajari materi terlebih dahulu, lalu uji pemahamanmu!</p>
+        </div>
+        
+        <div class="materi">
+            <h2>📖 Materi: Revolusi Prancis</h2>
+            <p>Sebelum Revolusi Prancis, negara tersebut menganut sistem monarki absolut, di mana raja memiliki kekuasaan penuh tanpa batas hukum. Sistem ini menyebabkan ketimpangan sosial dan ekonomi antara tiga golongan masyarakat: kaum bangsawan (golongan pertama), kaum gereja (golongan kedua), dan rakyat biasa (golongan ketiga). Golongan pertama dan kedua menikmati hak istimewa dan bebas pajak, sedangkan rakyat jelata harus membayar pajak tinggi serta hidup dalam kemiskinan.</p>
+            
+            <p>Krisis ekonomi yang parah akibat utang negara, gagal panen, dan pengelolaan yang buruk di bawah Raja Louis XVI membuat rakyat semakin menderita. Pada tahun 1789, golongan ketiga membentuk Majelis Nasional dan melakukan Sumpah Lapangan Tenis, bersumpah untuk menyusun konstitusi baru. Peristiwa Penyerbuan Penjara Bastille menjadi simbol perlawanan rakyat terhadap kekuasaan absolut dan menandai awal Revolusi Prancis.</p>
+            
+            <p>Setelah revolusi dimulai, Majelis Nasional menghapus sistem feodal dan mengeluarkan Deklarasi Hak Asasi Manusia dan Warga Negara. Namun, periode Masa Teror di bawah Robespierre menyebabkan kekacauan besar. Akhirnya, Napoleon Bonaparte mengambil alih kekuasaan melalui kudeta dan mengakhiri revolusi. Revolusi Prancis meninggalkan warisan penting berupa nilai-nilai kebebasan, kesetaraan, dan demokrasi, yang kemudian menginspirasi gerakan kemerdekaan di berbagai negara, termasuk Indonesia.</p>
+        </div>
+        
+        <div class="quiz-section">
+            <div id="questions"></div>
+            <button class="submit-btn" onclick="submitQuiz()">Kirim Jawaban</button>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "1. Sistem pemerintahan Prancis sebelum revolusi adalah …",
+                options: ["A. Demokrasi parlementer", "B. Monarki absolut", "C. Republik konstitusional", "D. Oligarki bangsawan"],
+                correct: 1,
+                explanation: "Prancis sebelum 1789 menganut monarki absolut, di mana raja memiliki kekuasaan penuh tanpa batas hukum."
+            },
+            {
+                question: "2. Golongan masyarakat yang menanggung beban pajak paling berat adalah …",
+                options: ["A. Bangsawan", "B. Pendeta", "C. Rakyat biasa", "D. Tentara"],
+                correct: 2,
+                explanation: "Golongan ketiga, yaitu rakyat biasa, harus menanggung pajak berat sementara golongan pertama dan kedua bebas pajak."
+            },
+            {
+                question: "3. Siapakah raja Prancis yang berkuasa saat Revolusi Prancis dimulai?",
+                options: ["A. Louis XIV", "B. Louis XV", "C. Louis XVI", "D. Napoleon Bonaparte"],
+                correct: 2,
+                explanation: "Raja Louis XVI memerintah ketika krisis ekonomi dan ketidakpuasan rakyat memuncak pada tahun 1789."
+            },
+            {
+                question: "4. Apa tujuan dari \"Sumpah Lapangan Tenis\"?",
+                options: ["A. Menyerang penjara Bastille", "B. Menghapus sistem pajak", "C. Menyusun konstitusi baru", "D. Menurunkan raja dengan paksa"],
+                correct: 2,
+                explanation: "Sumpah Lapangan Tenis dilakukan oleh Majelis Nasional untuk menyusun konstitusi baru bagi Prancis."
+            },
+            {
+                question: "5. Peristiwa Penyerbuan Bastille terjadi pada tahun …",
+                options: ["A. 1776", "B. 1789", "C. 1799", "D. 1804"],
+                correct: 1,
+                explanation: "Penyerbuan Bastille terjadi pada 14 Juli 1789 dan menjadi simbol dimulainya Revolusi Prancis."
+            },
+            {
+                question: "6. Simbol dari runtuhnya kekuasaan absolut di Prancis adalah …",
+                options: ["A. Deklarasi Hak Asasi", "B. Penyerbuan Bastille", "C. Pembentukan Majelis Nasional", "D. Masa Teror"],
+                correct: 1,
+                explanation: "Bastille melambangkan tirani raja, dan penyerbuannya menandai berakhirnya kekuasaan absolut."
+            },
+            {
+                question: "7. Dokumen penting yang dikeluarkan Majelis Nasional adalah …",
+                options: ["A. Piagam Magna Carta", "B. Deklarasi Kemerdekaan", "C. Deklarasi Hak Asasi Manusia dan Warga Negara", "D. Piagam Hak Asasi Rakyat"],
+                correct: 2,
+                explanation: "Dokumen ini menegaskan prinsip kebebasan, kesetaraan, dan persaudaraan."
+            },
+            {
+                question: "8. Siapa tokoh yang memimpin selama Masa Teror?",
+                options: ["A. Danton", "B. Robespierre", "C. Napoleon", "D. Rousseau"],
+                correct: 1,
+                explanation: "Maximilien Robespierre memimpin Komite Keamanan Publik dan menyebabkan banyak eksekusi selama Masa Teror."
+            },
+            {
+                question: "9. Masa Teror ditandai dengan …",
+                options: ["A. Reformasi sistem pajak", "B. Eksekusi massal terhadap lawan politik", "C. Kemenangan atas Inggris", "D. Penandatanganan konstitusi"],
+                correct: 1,
+                explanation: "Masa Teror dikenal karena eksekusi terhadap mereka yang dianggap musuh revolusi."
+            },
+            {
+                question: "10. Tokoh yang mengakhiri Revolusi Prancis melalui kudeta adalah …",
+                options: ["A. Robespierre", "B. Napoleon Bonaparte", "C. Danton", "D. Louis XVIII"],
+                correct: 1,
+                explanation: "Napoleon Bonaparte melakukan kudeta pada 1799 dan mengakhiri periode revolusi."
+            },
+            {
+                question: "11. Salah satu penyebab utama Revolusi Prancis adalah …",
+                options: ["A. Perang saudara antarbangsawan", "B. Krisis ekonomi dan kelaparan", "C. Serangan negara tetangga", "D. Perang kolonial"],
+                correct: 1,
+                explanation: "Krisis ekonomi akibat utang dan gagal panen menyebabkan penderitaan rakyat."
+            },
+            {
+                question: "12. Revolusi Prancis memberikan inspirasi bagi bangsa Indonesia dalam hal …",
+                options: ["A. Perdagangan bebas", "B. Nasionalisme dan kemerdekaan", "C. Kolonialisme baru", "D. Ekspansi wilayah"],
+                correct: 1,
+                explanation: "Nilai kebebasan dan kesetaraan dari Revolusi Prancis menginspirasi perjuangan kemerdekaan Indonesia."
+            },
+            {
+                question: "13. Pernyataan \"Liberté, égalité, fraternité\" berarti …",
+                options: ["A. Kekuasaan raja yang mutlak", "B. Kebebasan, kesetaraan, dan persaudaraan", "C. Perdamaian dan kemakmuran", "D. Hukum dan keadilan"],
+                correct: 1,
+                explanation: "Moto Revolusi Prancis ini mencerminkan semangat demokrasi dan hak asasi manusia."
+            },
+            {
+                question: "14. Salah satu akibat sosial dari Revolusi Prancis adalah …",
+                options: ["A. Lahirnya kelas bangsawan baru", "B. Meningkatnya pengaruh gereja", "C. Berakhirnya hak istimewa kaum bangsawan", "D. Kembalinya kekuasaan monarki"],
+                correct: 2,
+                explanation: "Revolusi menghapus sistem feodal dan mengakhiri hak istimewa bangsawan."
+            },
+            {
+                question: "15. Napoleon Bonaparte naik ke tampuk kekuasaan dengan cara …",
+                options: ["A. Pemilihan umum", "B. Kudeta", "C. Pewarisan tahta", "D. Revolusi rakyat"],
+                correct: 1,
+                explanation: "Napoleon mengambil alih pemerintahan melalui kudeta pada tahun 1799 dan menjadi pemimpin Prancis."
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const questionsDiv = document.getElementById('questions');
+            quizData.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.id = `question-${index}`;
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, i) => {
+                    optionsHTML += `<div class="option" onclick="selectOption(${index}, ${i})" id="q${index}-opt${i}">${opt}</div>`;
+                });
+                
+                questionDiv.innerHTML = `
+                    <h3>${q.question}</h3>
+                    <div class="options">${optionsHTML}</div>
+                    <div class="explanation" id="explanation-${index}"><strong>Penjelasan:</strong> ${q.explanation}</div>
+                `;
+                
+                questionsDiv.appendChild(questionDiv);
+            });
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            // Cek jika sudah submit, jangan bisa pilih lagi
+            if (document.getElementById('result').classList.contains('show')) {
+                return;
+            }
+            
+            const options = document.querySelectorAll(`#question-${questionIndex} .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`q${questionIndex}-opt${optionIndex}`).classList.add('selected');
+            userAnswers[questionIndex] = optionIndex;
+        }
+
+        function submitQuiz() {
+            if (Object.keys(userAnswers).length < quizData.length) {
+                alert('Mohon jawab semua soal terlebih dahulu!');
+                return;
+            }
+
+            let score = 0;
+            quizData.forEach((q, index) => {
+                const options = document.querySelectorAll(`#question-${index} .option`);
+                options.forEach((opt, i) => {
+                    opt.style.pointerEvents = 'none';
+                    if (i === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (i === userAnswers[index] && i !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                document.getElementById(`explanation-${index}`).classList.add('show');
+                
+                if (userAnswers[index] === q.correct) {
+                    score++;
+                }
+            });
+
+            const percentage = (score / quizData.length * 100).toFixed(0);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h3>🎉 Hasil Kuis</h3>
+                <div class="score">${score}/${quizData.length}</div>
+                <p>Nilai: ${percentage}%</p>
+                <p>${getGrade(percentage)}</p>
+            `;
+            resultDiv.classList.add('show');
+            
+            document.querySelector('.submit-btn').style.display = 'none';
+        }
+
+        function getGrade(percentage) {
+            if (percentage >= 90) return '⭐ Luar biasa! Pemahaman sempurna!';
+            if (percentage >= 75) return '👍 Bagus! Kamu sudah menguasai materi ini!';
+            if (percentage >= 60) return '📚 Cukup baik, tapi masih bisa ditingkatkan!';
+            return '💪 Tetap semangat! Coba baca materi lagi ya!';
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
