@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Revolusi Amerika</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            padding: 15px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .materi {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #2a5298;
+        }
+        
+        .materi h2 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .materi p {
+            text-align: justify;
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .quiz-section {
+            padding: 20px;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 20px -20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #2a5298;
+        }
+        
+        .question.critical {
+            border-left: 4px solid #7e22ce;
+            background: #faf5ff;
+        }
+        
+        .question h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: white;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .option:hover {
+            border-color: #2a5298;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: #2a5298;
+            background: #e0e7ff;
+        }
+        
+        .question.critical .option.selected {
+            border-color: #7e22ce;
+            background: #faf5ff;
+        }
+        
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+        
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .explanation {
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            display: none;
+            font-size: 13px;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result h3 {
+            color: #2e7d32;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .result p {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .score {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin: 10px 0;
+        }
+        
+        .score-detail {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+        }
+        
+        .score-item {
+            text-align: center;
+        }
+        
+        .score-item .label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .score-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗽 Kuis Revolusi Amerika</h1>
+            <p>Pelajari materi terlebih dahulu, lalu uji pemahamanmu!</p>
+        </div>
+        
+        <div class="materi">
+            <h2>📖 Materi: Revolusi Amerika</h2>
+            <p>Amerika pada awalnya dihuni oleh berbagai suku asli yang disebut Suku Indian, hingga kedatangan Christopher Columbus pada tahun 1492. Setelah itu, bangsa Eropa mulai menjajah benua tersebut. Spanyol dan Portugis menguasai Amerika Selatan, sementara Inggris, Prancis, dan Belanda bersaing menguasai Amerika Utara. Dari persaingan tersebut, terbentuklah 13 koloni Inggris di Amerika Utara. Kolonis yang datang membawa semangat kebebasan ekonomi dan agama, namun mereka justru mengalami penindasan melalui berbagai kebijakan Inggris seperti Navigation Acts, pajak tanpa perwakilan, Proclamation Line 1763, serta kehadiran militer Inggris di tanah koloni.</p>
+            
+            <p>Ketegangan meningkat hingga terjadi Boston Tea Party pada tahun 1773, ketika para kolonis membuang muatan teh Inggris ke laut sebagai bentuk protes terhadap pajak. Sebagai tanggapan, Inggris memperketat pengawasan sehingga memicu pembentukan Kongres Kontinental I pada 1774 yang menyerukan boikot terhadap barang Inggris. Konflik akhirnya pecah di Lexington–Concord pada 19 April 1775. Kongres Kontinental II kemudian menunjuk George Washington sebagai panglima perang, sementara Benjamin Franklin bergerak melalui jalur diplomasi. Thomas Paine menulis pamflet Common Sense (1776) yang membangkitkan semangat kemerdekaan rakyat. Pada 4 Juli 1776, Deklarasi Kemerdekaan yang ditulis oleh Thomas Jefferson disahkan di Philadelphia dan menegaskan hak-hak alamiah manusia.</p>
+            
+            <p>Kemenangan Amerika di Saratoga (1777) menarik dukungan dari Prancis, Belanda, dan Spanyol. Prancis bahkan mengirim bantuan militer di bawah Marquis de Lafayette. Pada tahun 1781, pasukan Inggris di bawah Jenderal Cornwallis menyerah di Yorktown, Virginia, menandai berakhirnya perang besar. Perjanjian Paris tahun 1783 mengakui kemerdekaan Amerika Serikat. Setelah perang, muncul perdebatan antara kaum Republik yang dipimpin Thomas Jefferson dan kaum Federalis yang dipimpin Alexander Hamilton. Dari perdebatan itu lahir Konstitusi Amerika, sistem pemerintahan dengan pemisahan kekuasaan, Bill of Rights, dan pelantikan George Washington sebagai presiden pertama pada 30 April 1789. Revolusi Amerika kemudian menginspirasi perjuangan kebebasan di seluruh dunia, termasuk Revolusi Prancis, dan menjadi simbol perlawanan terhadap tirani serta perjuangan untuk kesetaraan dan partisipasi rakyat.</p>
+        </div>
+        
+        <div class="quiz-section">
+            <div class="section-title">📝 Bagian I: Soal Pemahaman Materi (15 Soal)</div>
+            <div id="questions-basic"></div>
+            
+            <div class="section-title">🧠 Bagian II: Soal Kritis - Analisis & Penalaran (5 Soal)</div>
+            <div id="questions-critical"></div>
+            
+            <button class="submit-btn" onclick="submitQuiz()">Kirim Jawaban</button>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const quizDataBasic = [
+            {
+                question: "1. Siapakah penduduk asli Amerika sebelum kedatangan bangsa Eropa?",
+                options: ["A. Suku Aztec", "B. Suku Inca", "C. Suku Indian", "D. Suku Maya"],
+                correct: 2,
+                explanation: "Sebelum bangsa Eropa datang, wilayah Amerika dihuni oleh Suku Indian yang tersebar di berbagai wilayah."
+            },
+            {
+                question: "2. Siapa penemu benua Amerika pada tahun 1492?",
+                options: ["A. Vasco da Gama", "B. Ferdinand Magellan", "C. Christopher Columbus", "D. Amerigo Vespucci"],
+                correct: 2,
+                explanation: "Columbus mendarat di kepulauan Bahama pada 1492, memicu kolonisasi besar-besaran oleh Eropa."
+            },
+            {
+                question: "3. Dua negara yang menguasai Amerika Selatan adalah…",
+                options: ["A. Inggris dan Prancis", "B. Spanyol dan Portugis", "C. Belanda dan Inggris", "D. Prancis dan Portugis"],
+                correct: 1,
+                explanation: "Spanyol dan Portugis membagi wilayah Amerika Selatan berdasarkan Perjanjian Tordesillas."
+            },
+            {
+                question: "4. Kolonis Inggris datang ke Amerika karena alasan…",
+                options: ["A. Menyebarkan agama Katolik", "B. Menghindari peperangan di Eropa", "C. Mencari kebebasan ekonomi dan agama", "D. Menjadi bagian dari kerajaan Inggris"],
+                correct: 2,
+                explanation: "Mereka ingin bebas dari penindasan ekonomi dan agama di Eropa."
+            },
+            {
+                question: "5. Kebijakan Inggris yang membatasi perdagangan koloni disebut…",
+                options: ["A. Stamp Act", "B. Tea Act", "C. Navigation Acts", "D. Proclamation Line"],
+                correct: 2,
+                explanation: "Navigation Acts memaksa koloni hanya berdagang menggunakan kapal Inggris."
+            },
+            {
+                question: "6. Slogan \"No taxation without representation\" bermakna…",
+                options: ["A. Pajak harus disetujui kolonis", "B. Kolonis menolak semua pajak", "C. Pajak tanpa wakil di parlemen tidak adil", "D. Inggris tidak boleh memungut pajak"],
+                correct: 2,
+                explanation: "Kolonis menolak pajak karena tidak memiliki wakil di parlemen Inggris."
+            },
+            {
+                question: "7. Peristiwa Boston Tea Party terjadi pada tahun…",
+                options: ["A. 1770", "B. 1773", "C. 1774", "D. 1775"],
+                correct: 1,
+                explanation: "Tahun 1773, kolonis membuang teh Inggris ke laut sebagai bentuk protes pajak teh."
+            },
+            {
+                question: "8. Pertempuran pertama Revolusi Amerika terjadi di…",
+                options: ["A. Saratoga", "B. Philadelphia", "C. Lexington–Concord", "D. Yorktown"],
+                correct: 2,
+                explanation: "Pertempuran Lexington–Concord menjadi awal perang kemerdekaan pada 1775."
+            },
+            {
+                question: "9. Siapa yang ditunjuk sebagai panglima perang oleh Kongres Kontinental II?",
+                options: ["A. Thomas Jefferson", "B. George Washington", "C. Benjamin Franklin", "D. John Adams"],
+                correct: 1,
+                explanation: "George Washington diangkat memimpin pasukan revolusi melawan Inggris."
+            },
+            {
+                question: "10. Siapa penulis Common Sense?",
+                options: ["A. Thomas Jefferson", "B. Thomas Paine", "C. Alexander Hamilton", "D. Benjamin Franklin"],
+                correct: 1,
+                explanation: "Pamflet Common Sense karya Thomas Paine memotivasi rakyat untuk merdeka."
+            },
+            {
+                question: "11. Deklarasi Kemerdekaan disahkan pada…",
+                options: ["A. 4 Juli 1776", "B. 19 April 1775", "C. 1777", "D. 1783"],
+                correct: 0,
+                explanation: "4 Juli 1776 adalah tanggal resmi kemerdekaan Amerika Serikat."
+            },
+            {
+                question: "12. Kemenangan Amerika di Saratoga berdampak pada…",
+                options: ["A. Kekalahan Inggris sepenuhnya", "B. Dukungan Prancis terhadap Amerika", "C. Kemerdekaan langsung Amerika", "D. Penghapusan pajak oleh Inggris"],
+                correct: 1,
+                explanation: "Setelah Saratoga, Prancis yakin Amerika bisa menang dan memberi dukungan militer."
+            },
+            {
+                question: "13. Penyerahan pasukan Inggris di Yorktown terjadi pada tahun…",
+                options: ["A. 1777", "B. 1781", "C. 1783", "D. 1789"],
+                correct: 1,
+                explanation: "Kekalahan Cornwallis di Yorktown menandai berakhirnya perang besar."
+            },
+            {
+                question: "14. Perjanjian yang mengakui kemerdekaan Amerika adalah…",
+                options: ["A. Treaty of Paris", "B. Bill of Rights", "C. Declaration of Independence", "D. Constitution Act"],
+                correct: 0,
+                explanation: "Treaty of Paris (1783) menandai pengakuan resmi kemerdekaan Amerika."
+            },
+            {
+                question: "15. Siapakah presiden pertama Amerika Serikat?",
+                options: ["A. John Adams", "B. George Washington", "C. Thomas Jefferson", "D. Benjamin Franklin"],
+                correct: 1,
+                explanation: "George Washington dilantik pada 30 April 1789 sebagai presiden pertama."
+            }
+        ];
+
+        const quizDataCritical = [
+            {
+                question: "16. Mengapa pamflet Common Sense dianggap berpengaruh besar dalam Revolusi Amerika?",
+                options: ["A. Karena menyerang kerajaan Inggris secara langsung", "B. Karena membangkitkan semangat rakyat untuk kemerdekaan", "C. Karena ditulis oleh pejabat pemerintah", "D. Karena berisi hukum baru Amerika"],
+                correct: 1,
+                explanation: "Pamflet ini menyentuh hati rakyat biasa dengan bahasa sederhana yang menyerukan kemerdekaan."
+            },
+            {
+                question: "17. Mengapa kemenangan di Saratoga dianggap titik balik perang?",
+                options: ["A. Karena Inggris mulai kalah besar", "B. Karena Amerika mulai memiliki senjata", "C. Karena meyakinkan Prancis untuk membantu Amerika", "D. Karena George Washington menang di sana"],
+                correct: 2,
+                explanation: "Setelah Saratoga, Prancis melihat peluang kemenangan Amerika dan bergabung sebagai sekutu."
+            },
+            {
+                question: "18. Jika Inggris tidak memberlakukan pajak tanpa perwakilan, apa kemungkinan yang terjadi?",
+                options: ["A. Revolusi tetap terjadi", "B. Koloni mungkin tidak memberontak", "C. Amerika akan dikuasai Spanyol", "D. Washington tidak akan terkenal"],
+                correct: 1,
+                explanation: "Ketidakadilan pajak menjadi pemicu utama revolusi, tanpa itu konflik bisa saja dihindari."
+            },
+            {
+                question: "19. Mengapa Revolusi Amerika menginspirasi Revolusi Prancis?",
+                options: ["A. Karena melibatkan tokoh Prancis", "B. Karena menunjukkan rakyat bisa melawan tirani", "C. Karena memiliki pemimpin yang sama", "D. Karena terjadi di tahun yang sama"],
+                correct: 1,
+                explanation: "Keberhasilan rakyat Amerika melawan kekuasaan tirani menginspirasi rakyat Prancis untuk berjuang."
+            },
+            {
+                question: "20. Apa nilai utama yang diwariskan Revolusi Amerika bagi dunia modern?",
+                options: ["A. Kekuasaan absolut raja", "B. Kebebasan dan kesetaraan warga", "C. Dominasi militer", "D. Ekspansi wilayah"],
+                correct: 1,
+                explanation: "Revolusi Amerika menegaskan hak alamiah manusia: kebebasan, kesetaraan, dan partisipasi politik."
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const basicDiv = document.getElementById('questions-basic');
+            quizDataBasic.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.id = `question-${index}`;
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, i) => {
+                    optionsHTML += `<div class="option" onclick="selectOption(${index}, ${i})" id="q${index}-opt${i}">${opt}</div>`;
+                });
+                
+                questionDiv.innerHTML = `
+                    <h3>${q.question}</h3>
+                    <div class="options">${optionsHTML}</div>
+                    <div class="explanation" id="explanation-${index}"><strong>Penjelasan:</strong> ${q.explanation}</div>
+                `;
+                
+                basicDiv.appendChild(questionDiv);
+            });
+
+            const criticalDiv = document.getElementById('questions-critical');
+            quizDataCritical.forEach((q, index) => {
+                const qIndex = index + quizDataBasic.length;
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question critical';
+                questionDiv.id = `question-${qIndex}`;
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, i) => {
+                    optionsHTML += `<div class="option" onclick="selectOption(${qIndex}, ${i})" id="q${qIndex}-opt${i}">${opt}</div>`;
+                });
+                
+                questionDiv.innerHTML = `
+                    <h3>${q.question}</h3>
+                    <div class="options">${optionsHTML}</div>
+                    <div class="explanation" id="explanation-${qIndex}"><strong>Penjelasan:</strong> ${q.explanation}</div>
+                `;
+                
+                criticalDiv.appendChild(questionDiv);
+            });
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            if (document.getElementById('result').classList.contains('show')) {
+                return;
+            }
+            
+            const options = document.querySelectorAll(`#question-${questionIndex} .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`q${questionIndex}-opt${optionIndex}`).classList.add('selected');
+            userAnswers[questionIndex] = optionIndex;
+        }
+
+        function submitQuiz() {
+            const totalQuestions = quizDataBasic.length + quizDataCritical.length;
+            if (Object.keys(userAnswers).length < totalQuestions) {
+                alert('Mohon jawab semua soal terlebih dahulu!');
+                return;
+            }
+
+            let scoreBasic = 0;
+            let scoreCritical = 0;
+            
+            quizDataBasic.forEach((q, index) => {
+                const options = document.querySelectorAll(`#question-${index} .option`);
+                options.forEach((opt, i) => {
+                    opt.style.pointerEvents = 'none';
+                    if (i === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (i === userAnswers[index] && i !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                document.getElementById(`explanation-${index}`).classList.add('show');
+                
+                if (userAnswers[index] === q.correct) {
+                    scoreBasic++;
+                }
+            });
+
+            quizDataCritical.forEach((q, index) => {
+                const qIndex = index + quizDataBasic.length;
+                const options = document.querySelectorAll(`#question-${qIndex} .option`);
+                options.forEach((opt, i) => {
+                    opt.style.pointerEvents = 'none';
+                    if (i === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (i === userAnswers[qIndex] && i !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                document.getElementById(`explanation-${qIndex}`).classList.add('show');
+                
+                if (userAnswers[qIndex] === q.correct) {
+                    scoreCritical++;
+                }
+            });
+
+            const totalScore = scoreBasic + scoreCritical;
+            const percentage = (totalScore / totalQuestions * 100).toFixed(0);
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h3>🎉 Hasil Kuis</h3>
+                <div class="score">${totalScore}/${totalQuestions}</div>
+                <p>Nilai: ${percentage}%</p>
+                <div class="score-detail">
+                    <div class="score-item">
+                        <div class="label">Soal Pemahaman</div>
+                        <div class="value">${scoreBasic}/15</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="label">Soal Kritis</div>
+                        <div class="value">${scoreCritical}/5</div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px;">${getGrade(percentage)}</p>
+            `;
+            resultDiv.classList.add('show');
+            
+            document.querySelector('.submit-btn').style.display = 'none';
+        }
+
+        function getGrade(percentage) {
+            if (percentage >= 90) return '⭐ Luar biasa! Pemahaman sempurna!';
+            if (percentage >= 75) return '👍 Bagus! Kamu sudah menguasai materi ini!';
+            if (percentage >= 60) return '📚 Cukup baik, tapi masih bisa ditingkatkan!';
+            return '💪 Tetap semangat! Coba baca materi lagi ya!';
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
