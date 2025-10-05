@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Menyusun Paragraf - Revolusi Amerika</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #b92b27 100%);
+            min-height: 100vh;
+            padding: 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #1e3c72;
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            background: #f0f4ff;
+            border-left: 4px solid #1e3c72;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .instructions h3 {
+            color: #1e3c72;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            color: #555;
+        }
+
+        .instructions li {
+            margin: 5px 0;
+        }
+
+        .sentence-bank {
+            margin-bottom: 20px;
+        }
+
+        .sentence-bank h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .sentence {
+            background: #f0f0f0;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .sentence:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .sentence:active {
+            transform: scale(0.98);
+        }
+
+        .sentence.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #d0d0d0;
+        }
+
+        .sentence.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .sentence.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .answer-area {
+            min-height: 150px;
+            background: #fafafa;
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .answer-area h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .answer-area .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .check-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .check-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .reset-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .score {
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .correct-answer {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .correct-answer h3 {
+            color: #856404;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .correct-answer p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 14px;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Kuis Menyusun Paragraf</h1>
+        <div class="subtitle">Revolusi Amerika</div>
+
+        <div class="instructions">
+            <h3>📋 Petunjuk Pengerjaan:</h3>
+            <ul>
+                <li>Klik kalimat untuk memindahkannya ke kotak jawaban</li>
+                <li>Susun berdasarkan urutan kronologis peristiwa</li>
+                <li>Klik kalimat di kotak jawaban untuk menghapusnya</li>
+                <li>Pindahkan semua kalimat sebelum periksa jawaban</li>
+            </ul>
+        </div>
+
+        <div class="sentence-bank">
+            <h3>🔤 Kalimat Acak:</h3>
+            <div id="sentenceBank"></div>
+        </div>
+
+        <div class="answer-area" id="answerArea">
+            <h3>✍️ Susunan Jawabanmu:</h3>
+            <div class="empty-message">Klik kalimat di atas untuk menyusun paragraf</div>
+        </div>
+
+        <div class="buttons">
+            <button class="check-btn" onclick="checkAnswer()">✓ Periksa Jawaban</button>
+            <button class="reset-btn" onclick="resetQuiz()">↻ Ulangi</button>
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="correct-answer" id="correctAnswer">
+            <h3>💡 Susunan Paragraf yang Benar:</h3>
+            <p id="correctParagraph"></p>
+        </div>
+    </div>
+
+    <script>
+        const sentences = [
+            "Amerika awalnya dihuni Suku Indian hingga kedatangan Columbus pada 1492, kemudian Spanyol dan Portugis menguasai Amerika Selatan, sedangkan Amerika Utara diperebutkan Inggris, Prancis, dan Belanda hingga terbentuk 13 koloni Inggris.",
+            "Kolonis yang datang karena motif ekonomi dan agama menjunjung kebebasan, tetapi ditindas oleh Navigation Acts, pajak tanpa perwakilan, Proclamation Line 1763, dan kehadiran militer Inggris.",
+            "Protes kolonial memuncak lewat Boston Tea Party (1773) dan diikuti Kongres Kontinental I (1774) yang menyerukan boikot terhadap Inggris, namun diabaikan.",
+            "Pertempuran meletus di Lexington–Concord (19 April 1775), Kongres Kontinental II mengangkat George Washington sebagai panglima, sementara Benjamin Franklin berjuang lewat diplomasi, dan pamflet Common Sense karya Thomas Paine (1776) membakar semangat rakyat.",
+            "Pada 4 Juli 1776, Deklarasi Kemerdekaan yang disusun Thomas Jefferson disahkan di Philadelphia, menegaskan hak-hak alamiah manusia.",
+            "Kemenangan Amerika di Saratoga (1777) meyakinkan Prancis, Belanda, dan Spanyol untuk memberi bantuan, termasuk peran Marquis de Lafayette.",
+            "Titik balik akhir terjadi ketika pasukan Inggris di bawah Jenderal Cornwallis menyerah di Yorktown, Virginia (1781), yang membuka jalan bagi Perjanjian Paris (1783) untuk mengakui kemerdekaan Amerika Serikat.",
+            "Setelah merdeka, muncul perdebatan antara kaum Republik ala Jefferson dan kaum Federalis ala Hamilton hingga terbentuk Konvensi Federal yang melahirkan Konstitusi, Bill of Rights, serta pelantikan George Washington sebagai presiden pertama pada 30 April 1789.",
+            "Revolusi Amerika menegaskan prinsip kebebasan dan kesetaraan, menginspirasi Revolusi Prancis, serta mewariskan semangat partisipasi rakyat yang masih terasa dalam gerakan modern menuntut keadilan."
+        ];
+
+        // Urutan yang benar: 0, 1, 2, 3, 4, 5, 6, 7, 8 (sudah kronologis)
+        const correctOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+        function shuffleArray(arr) {
+            const shuffled = [...arr];
+            // Fisher-Yates shuffle algorithm
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        let currentShuffledOrder = [];
+
+        function initQuiz() {
+            const bank = document.getElementById('sentenceBank');
+            
+            // Buat array index dan acak
+            const indices = Array.from({length: sentences.length}, (_, i) => i);
+            currentShuffledOrder = shuffleArray(indices);
+            
+            bank.innerHTML = '';
+            
+            // Tampilkan kalimat sesuai urutan acak
+            currentShuffledOrder.forEach(i => {
+                const div = document.createElement('div');
+                div.className = 'sentence';
+                div.textContent = sentences[i];
+                div.dataset.index = i;
+                div.dataset.originalIndex = i;
+                div.onclick = function() {
+                    if (!this.classList.contains('used')) {
+                        moveSentenceToAnswer(this);
+                    }
+                };
+                bank.appendChild(div);
+            });
+        }
+
+        function moveSentenceToAnswer(element) {
+            const answerArea = document.getElementById('answerArea');
+            const emptyMsg = answerArea.querySelector('.empty-message');
+            if (emptyMsg) emptyMsg.remove();
+            
+            const clone = document.createElement('div');
+            clone.className = 'sentence';
+            clone.textContent = element.textContent;
+            clone.dataset.index = element.dataset.index;
+            clone.dataset.originalElement = element.dataset.originalIndex;
+            
+            // Simpan referensi ke elemen asli
+            const originalElement = element;
+            
+            clone.onclick = function() {
+                removeSentenceFromAnswer(this, originalElement);
+            };
+            
+            answerArea.appendChild(clone);
+            element.classList.add('used');
+        }
+
+        function removeSentenceFromAnswer(answerElement, originalElement) {
+            answerElement.remove();
+            
+            // Cari elemen asli di sentence bank dan aktifkan kembali
+            const bank = document.getElementById('sentenceBank');
+            const allSentences = bank.querySelectorAll('.sentence');
+            allSentences.forEach(sentence => {
+                if (sentence.dataset.index === originalElement.dataset.index) {
+                    sentence.classList.remove('used');
+                }
+            });
+            
+            checkIfEmpty();
+        }
+
+        function checkIfEmpty() {
+            const answerArea = document.getElementById('answerArea');
+            const sentences = answerArea.querySelectorAll('.sentence');
+            if (sentences.length === 0) {
+                answerArea.innerHTML = '<h3>✍️ Susunan Jawabanmu:</h3><div class="empty-message">Klik kalimat di atas untuk menyusun paragraf</div>';
+            }
+        }
+
+        function checkAnswer() {
+            const answerArea = document.getElementById('answerArea');
+            const userSentences = answerArea.querySelectorAll('.sentence');
+            const result = document.getElementById('result');
+            const correctAnswerDiv = document.getElementById('correctAnswer');
+            const correctParagraph = document.getElementById('correctParagraph');
+            
+            if (userSentences.length === 0) {
+                result.className = 'result error';
+                result.innerHTML = '⚠️ Silakan susun kalimat terlebih dahulu!';
+                result.style.display = 'block';
+                return;
+            }
+
+            if (userSentences.length < sentences.length) {
+                result.className = 'result error';
+                result.innerHTML = '⚠️ Pindahkan semua kalimat ke kotak jawaban terlebih dahulu!<div class="score">Kalimat yang dipindahkan: ' + userSentences.length + '/' + sentences.length + '</div>';
+                result.style.display = 'block';
+                return;
+            }
+
+            userSentences.forEach(s => {
+                s.classList.remove('correct', 'incorrect');
+            });
+
+            let correctCount = 0;
+            userSentences.forEach((sentence, i) => {
+                const userIndex = parseInt(sentence.dataset.index);
+                if (userIndex === correctOrder[i]) {
+                    sentence.classList.add('correct');
+                    correctCount++;
+                } else {
+                    sentence.classList.add('incorrect');
+                }
+            });
+
+            const score = Math.round((correctCount / sentences.length) * 100);
+            
+            if (score === 100) {
+                result.className = 'result success';
+                result.innerHTML = '🎉 Sempurna! Susunan paragrafmu benar!<div class="score">Skor: ' + score + '/100</div>';
+            } else {
+                result.className = 'result error';
+                result.innerHTML = '💪 Belum tepat. Coba perhatikan urutan kronologis peristiwanya!<div class="score">Skor: ' + score + '/100</div>';
+            }
+            
+            result.style.display = 'block';
+            
+            const correctText = correctOrder.map(i => sentences[i]).join(' ');
+            correctParagraph.textContent = correctText;
+            correctAnswerDiv.style.display = 'block';
+        }
+
+        function resetQuiz() {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('correctAnswer').style.display = 'none';
+            document.getElementById('answerArea').innerHTML = '<h3>✍️ Susunan Jawabanmu:</h3><div class="empty-message">Klik kalimat di atas untuk menyusun paragraf</div>';
+            initQuiz();
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>
