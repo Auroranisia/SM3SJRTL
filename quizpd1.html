@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Perang Dunia I</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .score-info {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item .label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .score-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .quiz-content {
+            padding: 25px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .hint {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #856404;
+        }
+
+        .hint::before {
+            content: "💡 ";
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .option-letter {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            flex: 1;
+            color: #333;
+        }
+
+        .option.selected {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .option.correct .option-letter {
+            background: #28a745;
+        }
+
+        .option.wrong .option-letter {
+            background: #dc3545;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-check:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-next {
+            background: #28a745;
+            color: white;
+            display: none;
+        }
+
+        .btn-next:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-next.show {
+            display: block;
+        }
+
+        .result-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 25px;
+        }
+
+        .result-screen.show {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎖️ Quiz Perang Dunia I</h1>
+            <div class="score-info">
+                <div class="score-item">
+                    <div class="label">Soal</div>
+                    <div class="value" id="questionCounter">1/25</div>
+                </div>
+                <div class="score-item">
+                    <div class="label">Skor</div>
+                    <div class="value" id="scoreDisplay">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quiz-content" id="quizContent">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question-text" id="questionText"></div>
+            <div class="hint" id="hintText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="buttons">
+                <button class="btn btn-check" id="checkBtn" onclick="checkAnswer()">Cek Jawaban</button>
+                <button class="btn btn-next" id="nextBtn" onclick="nextQuestion()">Lanjut</button>
+            </div>
+        </div>
+
+        <div class="result-screen" id="resultScreen">
+            <div class="result-icon" id="resultIcon"></div>
+            <div class="result-score" id="finalScore"></div>
+            <div class="result-text" id="resultText"></div>
+            <button class="btn-restart" onclick="restartQuiz()">Ulangi Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questionsOriginal = [
+            {
+                question: "Penyebab utama pecahnya Perang Dunia I adalah terbunuhnya Putra Mahkota Austria-Hungaria bernama …",
+                options: ["Wilhelm II", "Gavrilo Princip", "Franz Ferdinand", "Nicholas II", "Otto von Bismarck"],
+                correct: 2,
+                hint: "Kejadiannya di Sarajevo, Bosnia tahun 1914."
+            },
+            {
+                question: "Pembunuh Franz Ferdinand berasal dari negara …",
+                options: ["Serbia", "Rusia", "Austria", "Prancis", "Italia"],
+                correct: 0,
+                hint: "Negara ini ingin membebaskan diri dari kekuasaan Austria."
+            },
+            {
+                question: "Negara-negara yang tergabung dalam Triple Alliance adalah …",
+                options: ["Inggris, Prancis, Rusia", "Jerman, Austria-Hungaria, Italia", "Jerman, Rusia, Turki", "Prancis, Amerika, Inggris", "Austria, Rusia, Prancis"],
+                correct: 1,
+                hint: "Disebut juga Blok Sentral."
+            },
+            {
+                question: "Aliansi Triple Entente beranggotakan …",
+                options: ["Inggris, Prancis, Rusia", "Jerman, Austria, Italia", "Inggris, Italia, Amerika", "Prancis, Rusia, Jepang", "Rusia, Turki, Inggris"],
+                correct: 0,
+                hint: "Blok Sekutu utama Eropa Barat."
+            },
+            {
+                question: "Pemicu bergabungnya Amerika Serikat dalam PD I adalah …",
+                options: ["Serangan Jerman terhadap kapal dagang Lusitania", "Invasi Jepang ke Filipina", "Serangan Rusia ke Polandia", "Blokade ekonomi Jerman", "Inggris meminta bantuan AS"],
+                correct: 0,
+                hint: "Kapal AS ditenggelamkan oleh kapal selam Jerman."
+            },
+            {
+                question: "Perang Dunia I berlangsung pada tahun …",
+                options: ["1912–1918", "1914–1918", "1915–1920", "1916–1922", "1910–1915"],
+                correct: 1,
+                hint: "Dimulai setelah pembunuhan di Sarajevo."
+            },
+            {
+                question: "Istilah politik air hangat merujuk pada kebijakan Rusia untuk …",
+                options: ["Menguasai pelabuhan bebas es", "Mencari sekutu baru", "Meningkatkan perdagangan dengan Jerman", "Menyebarkan ide komunisme", "Menguasai Eropa Timur"],
+                correct: 0,
+                hint: "Rusia ingin pelabuhan yang tidak membeku saat musim dingin."
+            },
+            {
+                question: "Tokoh yang mempersatukan Jerman sebelum PD I adalah …",
+                options: ["Wilhelm II", "Otto von Bismarck", "Adolf Hitler", "Nicholas II", "Franz Ferdinand"],
+                correct: 1,
+                hint: "Julukannya \"The Iron Chancellor\"."
+            },
+            {
+                question: "Organisasi internasional yang lahir setelah PD I adalah …",
+                options: ["PBB", "LBB", "NATO", "ASEAN", "WHO"],
+                correct: 1,
+                hint: "Pendahulu PBB."
+            },
+            {
+                question: "Pendiri Liga Bangsa-Bangsa adalah …",
+                options: ["Winston Churchill", "Woodrow Wilson", "Georges Clemenceau", "Franklin D. Roosevelt", "Wilhelm II"],
+                correct: 1,
+                hint: "Presiden Amerika Serikat saat PD I."
+            },
+            {
+                question: "Perjanjian yang mengakhiri PD I adalah …",
+                options: ["Perjanjian Jenewa", "Perjanjian Paris", "Perjanjian Versailles", "Perjanjian Postdam", "Perjanjian Sevres"],
+                correct: 2,
+                hint: "Ditandatangani di Prancis pada tahun 1919."
+            },
+            {
+                question: "Isi utama Perjanjian Versailles adalah …",
+                options: ["Austria harus menyerahkan koloni ke Inggris", "Jerman kehilangan semua daerah jajahannya", "Rusia dilarang membangun militer", "Italia memperoleh wilayah baru", "Jepang kehilangan jajahan Asia Timur"],
+                correct: 1,
+                hint: "Perjanjian ini paling memberatkan Jerman."
+            },
+            {
+                question: "Perjanjian St. Germain dilakukan antara Sekutu dan …",
+                options: ["Rusia", "Turki", "Austria", "Italia", "Bulgaria"],
+                correct: 2,
+                hint: "Menandai bubarnya Kekaisaran Austria-Hungaria."
+            },
+            {
+                question: "Nama kapal selam Jerman yang digunakan dalam PD I adalah …",
+                options: ["Mark V", "Zeppelin", "U-Boat", "Lusitania", "Blitzkrieg"],
+                correct: 2,
+                hint: "Kapal ini digunakan untuk menenggelamkan kapal Sekutu."
+            },
+            {
+                question: "Nama balon udara raksasa buatan Jerman pada PD I adalah …",
+                options: ["Zeppelin", "Mark V", "Lusitania", "Panzer", "Spitfire"],
+                correct: 0,
+                hint: "Digunakan untuk pengintaian udara."
+            },
+            {
+                question: "Front Barat dalam PD I terjadi antara …",
+                options: ["Jerman vs Rusia", "Austria vs Italia", "Jerman vs Inggris dan Prancis", "Inggris vs Turki", "Rusia vs Turki"],
+                correct: 2,
+                hint: "Terjadi di wilayah Belgia dan Prancis."
+            },
+            {
+                question: "Krisis ekonomi besar tahun 1929 dikenal sebagai …",
+                options: ["Great Depression", "New Deal", "Perang Ekonomi Dunia", "Revolusi Industri", "Perjanjian Ekonomi Dunia"],
+                correct: 0,
+                hint: "Dimulai dari bursa saham Amerika."
+            },
+            {
+                question: "Krisis ekonomi 1929 paling parah berdampak pada negara …",
+                options: ["Inggris", "Jerman", "Amerika Serikat", "Prancis", "Italia"],
+                correct: 2,
+                hint: "Dimulai di Wall Street."
+            },
+            {
+                question: "Salah satu dampak sosial dari PD I adalah …",
+                options: ["Lahirnya LBB", "Lost Generation", "Terbentuknya Uni Soviet", "Revolusi Industri", "Kemunduran Jepang"],
+                correct: 1,
+                hint: "Banyak pemuda Eropa tewas dalam perang."
+            },
+            {
+                question: "Perang Dunia I disebut \"Perang Dunia\" karena …",
+                options: ["Menggunakan senjata modern", "Terjadi di seluruh dunia", "Dampaknya dirasakan di berbagai belahan dunia", "Melibatkan Asia dan Afrika", "Diikuti oleh Amerika"],
+                correct: 2,
+                hint: "Efek global meski pusatnya di Eropa."
+            },
+            {
+                question: "Salah satu akibat politik PD I adalah …",
+                options: ["Runtuhnya kerajaan besar di Eropa", "Lahirnya NATO", "Munculnya Blok Barat dan Timur", "Tumbuhnya kolonialisme baru", "Munculnya Perang Dingin"],
+                correct: 0,
+                hint: "Kekaisaran Jerman, Rusia, dan Austria runtuh."
+            },
+            {
+                question: "Negara yang menganut paham chauvinisme secara berlebihan pada awal abad ke-20 adalah …",
+                options: ["Inggris", "Jerman", "Prancis", "Rusia", "Turki"],
+                correct: 1,
+                hint: "Negara ini merasa rasnya paling unggul di Eropa."
+            },
+            {
+                question: "Salah satu dampak ekonomi dari PD I adalah …",
+                options: ["Meningkatnya perdagangan global", "Terjadinya resesi panjang di Eropa", "Lahirnya sistem feodalisme", "Penghapusan uang kertas", "Kenaikan harga minyak dunia"],
+                correct: 1,
+                hint: "Setelah perang, ekonomi Eropa hancur."
+            },
+            {
+                question: "Perjanjian Sevres dilakukan antara Sekutu dan …",
+                options: ["Rusia", "Turki", "Austria", "Italia", "Jerman"],
+                correct: 1,
+                hint: "Mengakhiri perang dengan Kekaisaran Ottoman."
+            },
+            {
+                question: "Setelah PD I, Jerman bangkit kembali di bawah pimpinan …",
+                options: ["Otto von Bismarck", "Wilhelm II", "Adolf Hitler", "Woodrow Wilson", "Joseph Stalin"],
+                correct: 2,
+                hint: "Tokoh fasis dari Partai Nazi."
+            }
+        ];
+
+        let questions = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answered = false;
+
+        // Fungsi untuk mengacak array
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Fungsi untuk mengacak opsi dalam setiap soal
+        function shuffleQuestions() {
+            questions = questionsOriginal.map(q => {
+                const correctAnswer = q.options[q.correct];
+                const shuffledOptions = shuffleArray(q.options);
+                const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
+                
+                return {
+                    ...q,
+                    options: shuffledOptions,
+                    correct: newCorrectIndex
+                };
+            });
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            // Acak opsi setiap kali soal dimuat
+            const correctAnswer = q.options[q.correct];
+            const shuffledOptions = shuffleArray(q.options);
+            const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
+            
+            // Update soal dengan opsi yang sudah diacak
+            questions[currentQuestion] = {
+                ...q,
+                options: shuffledOptions,
+                correct: newCorrectIndex
+            };
+            
+            const currentQ = questions[currentQuestion];
+            
+            document.getElementById('questionNumber').textContent = `Soal ${currentQuestion + 1} dari ${questions.length}`;
+            document.getElementById('questionText').textContent = currentQ.question;
+            document.getElementById('hintText').textContent = currentQ.hint;
+            document.getElementById('questionCounter').textContent = `${currentQuestion + 1}/${questions.length}`;
+            document.getElementById('scoreDisplay').textContent = score;
+            
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            currentQ.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.onclick = () => selectAnswer(index);
+                optionDiv.innerHTML = `
+                    <label class="option-label">
+                        <div class="option-letter">${letters[index]}</div>
+                        <div class="option-text">${option}</div>
+                    </label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('checkBtn').disabled = true;
+            document.getElementById('nextBtn').classList.remove('show');
+            document.getElementById('feedback').classList.remove('show');
+            selectedAnswer = null;
+            answered = false;
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            
+            selectedAnswer = index;
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, i) => {
+                opt.classList.remove('selected');
+                if (i === index) {
+                    opt.classList.add('selected');
+                }
+            });
+            
+            document.getElementById('checkBtn').disabled = false;
+        }
+
+        function checkAnswer() {
+            if (selectedAnswer === null || answered) return;
+            
+            answered = true;
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+            
+            options.forEach((opt, i) => {
+                if (i === q.correct) {
+                    opt.classList.add('correct');
+                }
+                if (i === selectedAnswer && selectedAnswer !== q.correct) {
+                    opt.classList.add('wrong');
+                }
+            });
+            
+            if (selectedAnswer === q.correct) {
+                score += 4;
+                feedback.className = 'feedback correct show';
+                feedback.textContent = '✅ Benar! Jawaban Anda tepat!';
+            } else {
+                feedback.className = 'feedback wrong show';
+                const letters = ['A', 'B', 'C', 'D', 'E'];
+                feedback.textContent = `❌ Salah! Jawaban yang benar adalah ${letters[q.correct]}. ${q.options[q.correct]}`;
+            }
+            
+            document.getElementById('scoreDisplay').textContent = score;
+            document.getElementById('checkBtn').style.display = 'none';
+            document.getElementById('nextBtn').classList.add('show');
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                document.getElementById('checkBtn').style.display = 'block';
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quizContent').style.display = 'none';
+            const resultScreen = document.getElementById('resultScreen');
+            resultScreen.classList.add('show');
+            
+            const percentage = (score / (questions.length * 4)) * 100;
+            let icon, text;
+            
+            if (percentage >= 90) {
+                icon = '🏆';
+                text = 'Luar biasa! Anda sangat menguasai materi!';
+            } else if (percentage >= 75) {
+                icon = '🎉';
+                text = 'Bagus sekali! Anda memahami materi dengan baik!';
+            } else if (percentage >= 60) {
+                icon = '👍';
+                text = 'Cukup baik! Terus belajar ya!';
+            } else {
+                icon = '📚';
+                text = 'Jangan menyerah! Yuk belajar lagi!';
+            }
+            
+            document.getElementById('resultIcon').textContent = icon;
+            document.getElementById('finalScore').textContent = `${score}/${questions.length * 4}`;
+            document.getElementById('resultText').textContent = text;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            // Reset questions dari original
+            questions = questionsOriginal.map(q => ({...q}));
+            document.getElementById('resultScreen').classList.remove('show');
+            document.getElementById('quizContent').style.display = 'block';
+            loadQuestion();
+        }
+
+        // Inisialisasi questions dari original
+        questions = questionsOriginal.map(q => ({...q}));
+        
+        // Load first question on start
+        loadQuestion();
+    </script>
+</body>
+</html>
